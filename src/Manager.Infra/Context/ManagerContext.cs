@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Manager.Infra.Context
 {
-    internal class ManagerContext : DbContext
+    public class ManagerContext : DbContext
     {
         public ManagerContext(){}
     }
