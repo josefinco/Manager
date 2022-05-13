@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace Manager.Infra.Context
 {
-    public class ManagerContext : DbContext
+  public class ManagerContext : DbContext
+  {
+    public ManagerContext() { }
+
+    public ManagerContext(DbContextOptions<ManagerContext> options) : base(options) { }
+
+    public DbSet<User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public ManagerContext(){}
+      modelBuilder.ApplyConfiguration(new UserMap());
     }
+
+  }
 }
