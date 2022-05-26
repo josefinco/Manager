@@ -36,7 +36,7 @@ namespace Manager.Domain.Validators
                 .WithMessage("O email não pode ser vazio.")
 
                 .MaximumLength(280)
-                .WithMessage("O email deve ter no máximo 180 caracteres.")
+                .WithMessage("O email deve ter no máximo 280 caracteres.")
 
                 .MinimumLength(10)
                 .WithMessage("O email deve ter no mínimo 10 caracteres.")
