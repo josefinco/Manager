@@ -23,23 +23,23 @@ namespace Manager.Domain.Entities
         public void ChangeName(string name)
         {
             Name = name;
-            Validade();
+            Validate();
         }
 
         public void ChangePassword(string password)
         {
             Password = password;
-            Validade();
+            Validate();
         }
         public void ChangeEmail(string email)
         {
             Email = email;
-            Validade();
+            Validate();
         }
 
 
 
-        public override bool Validade()
+        public override bool Validate()
         {
             var validator = new UserValidator();
             var validation = validator.Validate(this);

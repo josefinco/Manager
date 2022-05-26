@@ -14,6 +14,6 @@ namespace Manager.Domain.Entities
 
         public IReadOnlyCollection<string>? Errors => _errors;
 
-        public abstract bool Validade();
+        public abstract bool Validate();
     }
 }
