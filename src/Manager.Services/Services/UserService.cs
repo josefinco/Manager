@@ -41,7 +41,7 @@ namespace Manager.Services.Services
         public async Task<UserDTO> Update(UserDTO userDTO)
         {
             var userExists = await _userRepository.GetByEmail(userDTO.Email);
-            if (userExists != null)
+            if (userExists == null)
                 throw new DomainException("O Usuário não existe");
 
             var user = _mapper.Map<User>(userDTO);
@@ -50,7 +50,7 @@ namespace Manager.Services.Services
             var userUpdated = await _userRepository.Update(user);
             return _mapper.Map<UserDTO>(userUpdated);
         }
-        public async Task Remove(int id)
+        public async Task Remove(long id)
         {
             var user = await _userRepository.Get(id);
             if (user == null)
@@ -59,7 +59,7 @@ namespace Manager.Services.Services
             await _userRepository.Remove(id);
 
         }
-        public async Task<UserDTO> Get(int id)
+        public async Task<UserDTO> Get(long id)
         {
             var user = await _userRepository.Get(id);
             if (user == null)
@@ -73,20 +73,6 @@ namespace Manager.Services.Services
 
             return _mapper.Map<List<UserDTO>>(allUsers);
         }
-
-        public async Task<List<UserDTO>> SearchByName(string name)
-        {
-
-            var users = await _userRepository.SearchByName(name);
-
-            return _mapper.Map<List<UserDTO>>(users);
-        }
-
-        public Task<UserDTO> GetByName(string emaill)
-        {
-            throw new NotImplementedException();
-        }
-        
         public async Task<List<UserDTO>> SearchByEmail(string email)
         {
 
@@ -101,6 +87,13 @@ namespace Manager.Services.Services
                 throw new DomainException("O Usuário não existe");
 
             return _mapper.Map<UserDTO>(user);
+        }
+        public async Task<List<UserDTO>> SearchByName(string name)
+        {
+
+            var users = await _userRepository.SearchByName(name);
+
+            return _mapper.Map<List<UserDTO>>(users);
         }
 
     }
