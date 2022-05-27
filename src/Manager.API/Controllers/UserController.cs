@@ -48,19 +48,55 @@ namespace Manager.API.Controllers
         }
 
 
+        [HttpPost]
+        [Route("api/v1/update")]
+        public async Task<IActionResult> Update([FromBody] UserDTO userDto)
+        {
+            try
+            {
+                var userUpdated = await _userService.Update(userDto);
+
+                return Ok(new ResultViewModel
+                {
+                    Message = "Usuário Atualizado com sucesso",
+                    Success = true,
+                    Data = userUpdated
+                });
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(Responses.DomainErrorMessage(ex.Message, ex.Errors));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, Responses.ApplicationErrorMessage());
+            }
+        }
+
+
         [HttpGet]
         [Route("/api/v1/users/get-all")]
         public async Task<IActionResult> GetAsync()
         {
-            var allUsers = await _userService.Get();
-
-
-            return Ok(new ResultViewModel
+            try
             {
-                Message = "Usuários encontrados com sucesso!",
-                Success = true,
-                Data = allUsers
-            });
+                var allUsers = await _userService.Get();
+
+                return Ok(new ResultViewModel
+                {
+                    Message = "Usuários encontrados com sucesso!",
+                    Success = true,
+                    Data = allUsers
+                });
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(Responses.DomainErrorMessage(ex.Message, ex.Errors));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, Responses.ApplicationErrorMessage());
+            }
         }
     }
 }
