@@ -1,3 +1,13 @@
+using AutoMapper;
+using Manager.API.ViewModels;
+using Manager.Domain.Entities;
+using Manager.Infra.Context;
+using Manager.Infra.Interfaces;
+using Manager.Infra.Repositories;
+using Manager.Services.DTO;
+using Manager.Services.Interfaces;
+using Manager.Services.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +34,26 @@ builder.Services.AddSwaggerGen(options =>
     });
 
 });
+#region AutoMapper
+
+var autoMapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<User, UserDTO>().ReverseMap();
+    cfg.CreateMap<CreateUserViewModel, UserDTO>().ReverseMap();
+});
+#endregion
+
+#region DI
+
+builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
+builder.Services.AddDbContext<ManagerContext>(options => options.UseSqlServer
+    (builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+#endregion
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
