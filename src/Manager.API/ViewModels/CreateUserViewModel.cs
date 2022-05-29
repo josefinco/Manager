@@ -14,12 +14,12 @@ namespace Manager.API.ViewModels
         [MaxLength(280, ErrorMessage = "O email deve ter no máximo 280 caracteres.")]
         [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
                             , ErrorMessage = "O email deve ser válido.")]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "A senha não pode ser nula.")]
         [MinLength(6, ErrorMessage = "A senha deve ter no mínimo 6 caracteres.")]
         [MaxLength(30, ErrorMessage = "A senha deve ter no máximo 30 caracteres.")]
-        public string? Password { get; set; }
+        public string Password { get; set; }
 
 
     }
