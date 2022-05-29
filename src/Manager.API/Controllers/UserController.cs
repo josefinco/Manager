@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Manager.Core.Exceptions;
 using Manager.API.ViewModels;
 using Manager.Services.Interfaces;
@@ -14,7 +13,6 @@ namespace Manager.API.Controllers
     public class UserController : ControllerBase
     {
 
-        #region -->> DI <<--
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
@@ -23,10 +21,9 @@ namespace Manager.API.Controllers
             _userService = userService;
             _mapper = mapper;
         }
-        #endregion 
 
-        [HttpPost]
         [Authorize]
+        [HttpPost]
         [Route("api/v1/users/create")]
         public async Task<IActionResult> Create([FromBody] CreateUserViewModel userViewModel)
         {
@@ -234,7 +231,6 @@ namespace Manager.API.Controllers
             }
 
         }
-
 
         [HttpGet]
         [Authorize]

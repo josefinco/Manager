@@ -16,8 +16,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 
 #region Swagger
@@ -36,7 +34,29 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://josefinco.github.io/index.html"),
         }
     });
-
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Por favor informe o token JWT",
+        Name = "Authorization",
+        BearerFormat = "JWT",
+        Scheme = "Bearer",
+        Type = SecuritySchemeType.ApiKey,
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
 });
 #endregion
 

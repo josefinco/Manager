@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace Manager.API.Token
 {
@@ -16,7 +17,7 @@ namespace Manager.API.Token
         public string GenerateToken()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = _configuration["Jwt:Key"];
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -25,7 +26,7 @@ namespace Manager.API.Token
                     new Claim(ClaimTypes.Role, "User")
                 }),
                 Expires = DateTime.UtcNow.AddHours(int.Parse(_configuration["Jwt:HourExpire"])),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
