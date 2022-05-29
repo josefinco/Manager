@@ -83,9 +83,6 @@ namespace Manager.Services.Services
         public async Task<UserDTO> GetByEmail(string emaill)
         {
             var user = await _userRepository.GetByEmail(emaill);
-            if (user == null)
-                throw new DomainException("O Usuário não existe");
-
             return _mapper.Map<UserDTO>(user);
         }
         public async Task<List<UserDTO>> SearchByName(string name)

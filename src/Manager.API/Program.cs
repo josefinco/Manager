@@ -1,4 +1,5 @@
 using AutoMapper;
+using Manager.API.Token;
 using Manager.API.ViewModels;
 using Manager.Domain.Entities;
 using Manager.Infra.Context;
@@ -7,18 +8,21 @@ using Manager.Infra.Repositories;
 using Manager.Services.DTO;
 using Manager.Services.Interfaces;
 using Manager.Services.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+#region Swagger
 builder.Services.AddSwaggerGen(options =>
 {
-    //options.DescribeAllEnumsAsStrings();
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Manager User API´",
@@ -34,6 +38,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 
 });
+#endregion
+
 #region AutoMapper
 
 var autoMapperConfig = new MapperConfiguration(cfg =>
@@ -44,6 +50,28 @@ var autoMapperConfig = new MapperConfiguration(cfg =>
 });
 #endregion
 
+#region JWT
+var secretKey = builder.Configuration["Jwt:Key"];
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+#endregion
+
 #region DI
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -51,6 +79,7 @@ builder.Services.AddDbContext<ManagerContext>(options => options.UseSqlServer
     (builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 #endregion
 
@@ -68,6 +97,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

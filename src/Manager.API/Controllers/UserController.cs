@@ -6,6 +6,7 @@ using Manager.Services.Interfaces;
 using AutoMapper;
 using Manager.Services.DTO;
 using Manager.API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Manager.API.Controllers
 {
@@ -13,6 +14,7 @@ namespace Manager.API.Controllers
     public class UserController : ControllerBase
     {
 
+        #region -->> DI <<--
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
@@ -21,8 +23,10 @@ namespace Manager.API.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+        #endregion 
 
         [HttpPost]
+        [Authorize]
         [Route("api/v1/users/create")]
         public async Task<IActionResult> Create([FromBody] CreateUserViewModel userViewModel)
         {
@@ -47,8 +51,8 @@ namespace Manager.API.Controllers
             }
         }
 
-
         [HttpPut]
+        [Authorize]
         [Route("/api/v1/users/update")]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserViewModel userViewModel)
         {
@@ -74,8 +78,8 @@ namespace Manager.API.Controllers
             }
         }
 
-
         [HttpDelete]
+        [Authorize]
         [Route("/api/v1/users/remove/{id}")]
         public async Task<IActionResult> Remove(long id)
         {
@@ -90,7 +94,7 @@ namespace Manager.API.Controllers
                     Data = null
                 });
             }
-            catch (DomainException ex)
+            catch (DomainException? ex)
             {
                 return BadRequest(Responses.DomainErrorMessage(ex.Message, ex.Errors));
             }
@@ -101,6 +105,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("/api/v1/users/get/{id}")]
         public async Task<IActionResult> Get(long id)
         {
@@ -135,6 +140,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("/api/v1/users/get-all")]
         public async Task<IActionResult> GetAll()
         {
@@ -160,6 +166,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("/api/v1/users/search-by-email")]
         public async Task<IActionResult> SearchByEmail(string email)
         {
@@ -194,6 +201,7 @@ namespace Manager.API.Controllers
         }
         
         [HttpGet]
+        [Authorize]
         [Route("/api/v1/users/get-by-email")]
         public async Task<IActionResult> GetByEmail(string email)
         {
@@ -228,8 +236,8 @@ namespace Manager.API.Controllers
         }
 
 
-
         [HttpGet]
+        [Authorize]
         [Route("/api/v1/users/search-by-name")]
         public async Task<IActionResult> SearchByName(string name)
         {
