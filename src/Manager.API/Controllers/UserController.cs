@@ -22,7 +22,7 @@ namespace Manager.API.Controllers
             _mapper = mapper;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [HttpPost]
         [Route("api/v1/users/create")]
         public async Task<IActionResult> Create([FromBody] CreateUserViewModel userViewModel)
@@ -49,7 +49,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/update")]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserViewModel userViewModel)
         {
@@ -76,7 +76,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/remove/{id}")]
         public async Task<IActionResult> Remove(long id)
         {
@@ -91,7 +91,7 @@ namespace Manager.API.Controllers
                     Data = null
                 });
             }
-            catch (DomainException? ex)
+            catch (DomainException ex)
             {
                 return BadRequest(Responses.DomainErrorMessage(ex.Message, ex.Errors));
             }
@@ -102,7 +102,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/get/{id}")]
         public async Task<IActionResult> Get(long id)
         {
@@ -137,7 +137,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/get-all")]
         public async Task<IActionResult> GetAll()
         {
@@ -163,7 +163,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/search-by-email")]
         public async Task<IActionResult> SearchByEmail(string email)
         {
@@ -198,7 +198,7 @@ namespace Manager.API.Controllers
         }
         
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/get-by-email")]
         public async Task<IActionResult> GetByEmail(string email)
         {
@@ -233,7 +233,7 @@ namespace Manager.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes="Bearer")]
         [Route("/api/v1/users/search-by-name")]
         public async Task<IActionResult> SearchByName(string name)
         {
