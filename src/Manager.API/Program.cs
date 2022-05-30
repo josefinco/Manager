@@ -1,4 +1,5 @@
 using AutoMapper;
+using EscNet.IoC.Cryptography;
 using Manager.API.Token;
 using Manager.API.ViewModels;
 using Manager.Domain.Entities;
@@ -100,6 +101,7 @@ builder.Services.AddDbContext<ManagerContext>(options => options.UseSqlServer
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+builder.Services.AddRijndaelCryptography(builder.Configuration["Cryptography:Key"]);
 
 #endregion
 
