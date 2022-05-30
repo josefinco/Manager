@@ -21,29 +21,29 @@ builder.Services.AddControllers();
 #region Swagger
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+  options.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "Manager User APIï¿½",
+    Version = "v1",
+    Description = "Api para gerï¿½ncia de usuï¿½rios",
+    TermsOfService = new Uri("https://example.com/terms"),
+    Contact = new OpenApiContact
     {
-        Title = "Manager User API´",
-        Version = "v1",
-        Description = "Api para gerência de usuários",
-        TermsOfService = new Uri("https://example.com/terms"),
-        Contact = new OpenApiContact
-        {
-            Name = "José Finco",
-            Email = "josefinco_@hotmail.com",
-            Url = new Uri("https://josefinco.github.io/index.html"),
-        }
-    });
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Por favor informe o token JWT",
-        Name = "Authorization",
-        BearerFormat = "JWT",
-        Scheme = "Bearer",
-        Type = SecuritySchemeType.ApiKey,
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+      Name = "JosÃ© Finco",
+      Email = "josefinco_@hotmail.com",
+      Url = new Uri("https://josefinco.github.io/index.html"),
+    }
+  });
+  options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    In = ParameterLocation.Header,
+    Description = "Por favor informe o token JWT",
+    Name = "Authorization",
+    BearerFormat = "JWT",
+    Scheme = "Bearer",
+    Type = SecuritySchemeType.ApiKey,
+  });
+  options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -64,9 +64,9 @@ builder.Services.AddSwaggerGen(options =>
 
 var autoMapperConfig = new MapperConfiguration(cfg =>
 {
-    cfg.CreateMap<User, UserDTO>().ReverseMap();
-    cfg.CreateMap<CreateUserViewModel, UserDTO>().ReverseMap();
-    cfg.CreateMap<UpdateUserViewModel, UserDTO>().ReverseMap();
+  cfg.CreateMap<User, UserDTO>().ReverseMap();
+  cfg.CreateMap<CreateUserViewModel, UserDTO>().ReverseMap();
+  cfg.CreateMap<UpdateUserViewModel, UserDTO>().ReverseMap();
 });
 #endregion
 
@@ -75,20 +75,20 @@ var secretKey = builder.Configuration["Jwt:Key"];
 
 builder.Services.AddAuthentication(x =>
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+  x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(x =>
 {
-    x.RequireHttpsMetadata = false;
-    x.SaveToken = true;
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
+  x.RequireHttpsMetadata = false;
+  x.SaveToken = true;
+  x.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
+    ValidateIssuer = false,
+    ValidateAudience = false
+  };
 });
 #endregion
 
@@ -112,8 +112,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 app.UseAuthorization();
