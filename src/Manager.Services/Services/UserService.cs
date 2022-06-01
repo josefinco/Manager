@@ -54,7 +54,6 @@ namespace Manager.Services.Services
       var user = _mapper.Map<User>(userDTO);
       user.Validate();
       user.ChangePassword(_rijandelCryptography.Encrypt(user.Password));
-      //   System.Console.WriteLine(user.Password);
 
       var userUpdated = await _userRepository.Update(user);
       return _mapper.Map<UserDTO>(userUpdated);
