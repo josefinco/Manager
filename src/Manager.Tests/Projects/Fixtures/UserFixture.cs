@@ -29,7 +29,7 @@ namespace Manager.Tests.Projects.Fixtures
         {
             return new UserDTO
             {
-                Id = newId ? new Randomizer().Int(0, 1000) : 0,
+                Id = newId ? new Randomizer().Int(1, 1000) : 1,
                 Name = new Name().FirstName(),
                 Email = new Internet().Email(),
                 Password = new Internet().Password()

@@ -12,7 +12,6 @@ using Manager.Services.Services;
 using Manager.Tests.Configuration;
 using Manager.Tests.Projects.Fixtures;
 using Moq;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace Manager.Tests.Projects.Services
@@ -116,7 +115,7 @@ namespace Manager.Tests.Projects.Services
         }
 
         #endregion
-        
+
         #region Update
 
         [Fact(DisplayName = "Update Valid User")]
@@ -128,9 +127,12 @@ namespace Manager.Tests.Projects.Services
             var userToUpdate = UserFixture.CreateValidUserDTO();
             var userUpdated = _mapper.Map<User>(userToUpdate);
 
-            var encryptedPassword = new Lorem().Sentence();
+            var encryptedPassword = "123456789";
 
             _userRepositoryMock.Setup(x => x.Get(It.IsAny<long>()))
+                .ReturnsAsync(() => oldUser);
+
+            _userRepositoryMock.Setup(x => x.GetByEmail(It.IsAny<string>()))
                 .ReturnsAsync(() => oldUser);
 
             _rijndaelCryptographyMock.Setup(x => x.Encrypt(It.IsAny<string>()))
@@ -146,7 +148,7 @@ namespace Manager.Tests.Projects.Services
             result.Should()
                 .BeEquivalentTo(_mapper.Map<UserDTO>(userUpdated));
         }
-        
+
 
         [Fact(DisplayName = "Update When User Not Exists")]
         [Trait("Category", "Services")]
@@ -200,6 +202,34 @@ namespace Manager.Tests.Projects.Services
         [Trait("Category", "Services")]
         public async Task Remove_WhenUserExists_RemoveUser()
         {
+
+            // Arrange
+            var user = UserFixture.CreateValidUserDTO();
+            var userCreated = _mapper.Map<User>(user);
+
+            _userRepositoryMock.Setup(x => x.Get(It.IsAny<long>()))
+                .ReturnsAsync(() => userCreated);
+
+            _userRepositoryMock.Setup(x => x.Remove(It.IsAny<long>())).Returns<long>(x => Task.CompletedTask);
+
+            var _sutTeste = new UserService(
+                mapper: _mapper,
+                userRepository: _userRepositoryMock.Object,
+                rijndaelCryptography: _rijndaelCryptographyMock.Object
+                );
+
+            // ACT
+            var exception = await Record.ExceptionAsync(() => _sutTeste.Remove(userCreated.Id));
+
+
+            // Assert
+            Assert.True(exception == null);
+        }
+
+        [Fact(DisplayName = "Remove User When User Not Exists")]
+        [Trait("Category", "Services")]
+        public void Remove_WhenUserNotExists_ThrowsNewDomainException()
+        {
             // Arrange
             var userId = new Randomizer().Int(0, 1000);
 
@@ -207,10 +237,15 @@ namespace Manager.Tests.Projects.Services
                 .Verifiable();
 
             // Act
-            await _sut.Remove(userId);
+            Func<Task> act = async () =>
+            {
+                await _sut.Remove(userId);
+            };
 
-            // Assert
-            _userRepositoryMock.Verify(x => x.Remove(userId), Times.Once);
+            // Act
+            act.Should()
+                .ThrowAsync<DomainException>()
+                .WithMessage("O Usuário não existe");
         }
 
         #endregion
@@ -247,11 +282,11 @@ namespace Manager.Tests.Projects.Services
                 .ReturnsAsync(() => null);
 
             // Act
-            var result = await _sut.Get(userId);
-            
+            var exeception = await Record.ExceptionAsync(() => _sut.Get(userId));
+
             // Assert
-            result.Should()
-                .BeNull();
+
+            Assert.True(exeception.Message == "O Usuário não existe");
         }
 
         [Fact(DisplayName = "Get By Email")]
