@@ -37,7 +37,6 @@
     <Folder Include="Projects\Api\" />
     <Folder Include="Projects\Core\" />
     <Folder Include="Projects\Domain\" />
-    <Folder Include="Projects\Infra\" />
   </ItemGroup>
 
 </Project>

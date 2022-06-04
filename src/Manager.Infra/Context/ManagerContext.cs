@@ -15,7 +15,7 @@ namespace Manager.Infra.Context
 
     public ManagerContext(DbContextOptions<ManagerContext> options) : base(options) { }
 
-    public DbSet<User> Users { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     // Configuração para execução Inicial do Banco de Dados
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

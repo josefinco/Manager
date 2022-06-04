@@ -22,6 +22,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="MockQueryable.Moq" Version="6.0.1" />
+    <PackageReference Include="SlimRepository.EntityFrameworkCore" Version="0.4.0" />
   </ItemGroup>
 
   <ItemGroup>
